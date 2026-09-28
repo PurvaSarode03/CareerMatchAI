@@ -3,6 +3,12 @@
 Python-only stack: **Django + MySQL**, Bootstrap 5 / Chart.js frontend, and an in-process AI layer
 (`ai_engine/`) using spaCy, scikit-learn, Pandas, NumPy, Sentence Transformers, pypdf and python-docx.
 
+## 🎥 Project Demo
+
+<video src="cv.mp4" controls width="800">
+  Your browser does not support the video tag.
+</video>
+
 ## Quick start
 ```bash
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
