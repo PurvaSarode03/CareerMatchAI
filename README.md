@@ -13,14 +13,14 @@ Python-only stack: **Django + MySQL**, Bootstrap 5 / Chart.js frontend, and an i
       <b>Dashboard</b>
     </td>
     <td align="center">
-      <img src="" width="600"><br>
+      <img src="./analysis.jpeg" width="600"><br>
       <b>Resume Analysis</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="./analysis.jpeg" width="600"><br>
-      <b>AI Analysis</b>
+      <img src="recommendation.jpeg" width="600"><br>
+      <b>job recommendation</b>
     </td>
     <td align="center">
       <img src="./findjob.png" width="600"><br>
