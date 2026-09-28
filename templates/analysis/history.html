@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}History{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2"><h3>Analysis history</h3>
+  <form class="d-flex gap-2" method="get"><input class="form-control" name="q" value="{{ q }}" placeholder="Search job title">
+    <select class="form-select" name="sort" onchange="this.form.submit()"><option value="">Newest</option><option value="score" {% if sort == 'score' %}selected{% endif %}>Highest score</option></select>
+    <button class="btn btn-outline-primary">Go</button></form></div>
+<div class="card"><div class="table-responsive"><table class="table align-middle mb-0">
+  <thead><tr><th>Job</th><th>Resume</th><th>Score</th><th>Matched / Missing</th><th>Date</th><th></th></tr></thead><tbody>
+  {% for a in page %}<tr>
+    <td><a href="{% url 'analysis:detail' a.pk %}" class="text-decoration-none fw-semibold">{{ a.job_title|default:"Custom job description" }}</a></td>
+    <td class="small text-muted">{{ a.resume.title }}</td>
+    <td><span class="badge text-bg-{{ a.band }}">{{ a.score|floatformat:0 }}%</span></td>
+    <td class="small"><span class="text-success">{{ a.matched_skills|length }}</span> / <span class="text-danger">{{ a.missing_skills|length }}</span></td>
+    <td class="small text-muted">{{ a.created_at|date:"d M Y" }}</td>
+    <td><form method="post" action="{% url 'analysis:delete' a.pk %}" onsubmit="return confirm('Delete?')">{% csrf_token %}<button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form></td></tr>
+  {% empty %}<tr><td colspan="6" class="text-center text-muted py-5">No analyses yet. <a href="{% url 'analysis:new' %}">Run your first match</a>.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% include "partials/pagination.html" %}
+{% endblock %}

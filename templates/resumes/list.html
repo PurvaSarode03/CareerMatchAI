@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}My resumes{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3"><h3>My resumes</h3>
+  <a class="btn btn-brand" href="{% url 'resumes:upload' %}"><i class="bi bi-plus-lg"></i> Upload</a></div>
+<div class="row g-3">
+{% for r in resumes %}
+  <div class="col-md-6 col-lg-4"><div class="card card-hover h-100 p-3">
+    <h5 class="mb-0"><a class="text-decoration-none" href="{% url 'resumes:detail' r.pk %}">{{ r.title }}</a></h5>
+    <div class="text-muted small mb-2">{{ r.uploaded_at|date:"d M Y" }} · {{ r.skills.count }} skills</div>
+    <div>{% for s in r.skills.all|slice:":6" %}<span class="skill skill-neutral">{{ s.name }}</span>{% endfor %}</div>
+    <div class="mt-auto pt-2 d-flex gap-2">
+      <a class="btn btn-sm btn-outline-primary" href="{% url 'analysis:new' %}?resume={{ r.pk }}">Match a job</a>
+      <a class="btn btn-sm btn-outline-secondary" href="{% url 'resumes:detail' r.pk %}">Details</a>
+    </div>
+  </div></div>
+{% empty %}<div class="col"><div class="card p-5 text-center text-muted">No resumes yet. <a href="{% url 'resumes:upload' %}">Upload your first one</a>.</div></div>
+{% endfor %}
+</div>
+{% endblock %}

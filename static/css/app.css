@@ -1,0 +1,26 @@
+:root{--brand:#4f46e5;--brand-2:#7c3aed;--bg:#f5f6fb;--ink:#1f2340;--muted:#6b7090}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.navbar-brand{font-weight:700;letter-spacing:-.02em}
+.navbar{background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+.card{border:0;border-radius:1rem;box-shadow:0 2px 14px rgba(31,35,64,.06)}
+.card-hover{transition:transform .15s,box-shadow .15s}.card-hover:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(31,35,64,.12)}
+.btn-brand{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff;border:0}
+.btn-brand:hover{color:#fff;filter:brightness(1.08)}
+.stat{font-size:2rem;font-weight:700;line-height:1}
+.stat-label{color:var(--muted);font-size:.85rem}
+.icon-box{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:1.3rem}
+.skill{display:inline-block;padding:.25rem .65rem;border-radius:2rem;font-size:.8rem;margin:0 .25rem .35rem 0;font-weight:500}
+.skill-ok{background:#dcfce7;color:#166534}.skill-miss{background:#fee2e2;color:#991b1b}
+.skill-rel{background:#fef3c7;color:#92400e}.skill-neutral{background:#e0e7ff;color:#3730a3}
+.score-ring{--p:0;--c:#22c55e;width:150px;height:150px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--c) calc(var(--p)*1%),#e8eaf3 0)}
+.score-ring>div{width:118px;height:118px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center}
+.score-ring b{font-size:2.2rem;line-height:1}
+.ring-success{--c:#22c55e}.ring-warning{--c:#f59e0b}.ring-danger{--c:#ef4444}
+.dropzone{border:2px dashed #c7cbe6;border-radius:1rem;padding:2.2rem;text-align:center;background:#fafaff;cursor:pointer}
+.dropzone.drag{background:#eef0ff;border-color:var(--brand)}
+.timeline-item{border-left:3px solid #e0e7ff;padding-left:1rem;margin-bottom:1rem}
+.chart-box{position:relative;height:260px}
+.prio-high{border-left:4px solid #ef4444}.prio-medium{border-left:4px solid #f59e0b}.prio-low{border-left:4px solid #94a3b8}
+.suggestion{background:#fff;border-radius:.6rem;padding:.7rem 1rem;margin-bottom:.6rem;box-shadow:0 1px 6px rgba(31,35,64,.05)}
+footer{color:var(--muted);font-size:.85rem}

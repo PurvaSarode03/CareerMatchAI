@@ -1,0 +1,10 @@
+Django>=5.0,<6.2
+PyMySQL>=1.1
+pandas
+numpy
+scikit-learn
+spacy>=3.7
+sentence-transformers
+pypdf
+python-docx
+python-dotenv

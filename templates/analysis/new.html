@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}Match a job{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-8"><div class="card p-4">
+  <h4>Match your resume to a job</h4>
+  <p class="text-muted">Pick a job from our list, or paste / upload any job description.</p>
+  <form method="post" enctype="multipart/form-data" data-busy="Analysing match…">{% csrf_token %}
+    {% for e in form.non_field_errors %}<div class="alert alert-danger">{{ e }}</div>{% endfor %}
+    {% include "partials/field.html" with field=form.resume %}
+    {% include "partials/field.html" with field=form.job %}
+    <div class="text-center text-muted small my-2">— or —</div>
+    {% include "partials/field.html" with field=form.job_title %}
+    {% include "partials/field.html" with field=form.job_description %}
+    {% include "partials/field.html" with field=form.jd_file %}
+    <button class="btn btn-brand" type="submit"><i class="bi bi-bullseye"></i> Analyse match</button>
+  </form>
+</div></div></div>
+{% endblock %}

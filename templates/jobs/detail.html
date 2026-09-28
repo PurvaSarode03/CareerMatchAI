@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<div class="card p-4"><div class="d-flex flex-wrap justify-content-between gap-2">
+  <div><h3 class="mb-0">{{ job.title }}</h3><div class="text-muted">{{ job.company }} · {{ job.location|default:"—" }} · {{ job.get_job_type_display }} · {{ job.get_experience_level_display }}</div></div>
+  <a class="btn btn-brand align-self-start" href="{% url 'analysis:new' %}?job={{ job.pk }}"><i class="bi bi-bullseye"></i> Match with my resume</a></div>
+  <hr><h6>Required skills</h6>
+  <div class="mb-3">{% for s in job.required_skills.all %}<span class="skill {% if s.name in mine %}skill-ok{% else %}skill-neutral{% endif %}">{{ s.name }}</span>{% endfor %}</div>
+  <h6>Description</h6><p style="white-space:pre-line">{{ job.description }}</p>
+</div>
+{% endblock %}

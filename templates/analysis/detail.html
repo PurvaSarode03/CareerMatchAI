@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% block title %}Match result{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <div><h3 class="mb-0">{{ a.job_title|default:"Custom job description" }}</h3>
+    <span class="text-muted small">Resume: <a href="{% url 'resumes:detail' a.resume.pk %}">{{ a.resume.title }}</a> · {{ a.created_at|date:"d M Y, H:i" }}</span></div>
+  <div class="d-flex gap-2"><a class="btn btn-outline-primary" href="{% url 'analysis:new' %}?resume={{ a.resume.pk }}">New match</a>
+    <form method="post" action="{% url 'analysis:delete' a.pk %}" onsubmit="return confirm('Delete this analysis?')">{% csrf_token %}<button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button></form></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card p-4 text-center mb-3">
+      <div class="d-flex justify-content-center"><div class="score-ring ring-{{ a.band }}" style="--p:{{ a.score }}"><div><b>{{ a.score|floatformat:0 }}</b><small class="text-muted">/ 100</small></div></div></div>
+      <h5 class="mt-3">{{ a.explanation.verdict }}</h5>
+    </div>
+    <div class="card p-4 mb-3"><h5>How the score was calculated</h5>
+      {% for c in a.explanation.components %}
+      <div class="mb-3"><div class="d-flex justify-content-between"><b>{{ c.label }} <small class="text-muted">({{ c.weight }}%)</small></b><span>{{ c.score|floatformat:0 }} → {{ c.points|floatformat:1 }} pts</span></div>
+        <div class="progress" style="height:8px"><div class="progress-bar" style="width:{{ c.score }}%"></div></div>
+        <div class="small text-muted mt-1">{{ c.detail }}</div></div>
+      {% endfor %}
+      {% for r in a.explanation.reasons %}<div class="small mb-1"><i class="bi bi-dot"></i>{{ r }}</div>{% endfor %}
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card p-4 mb-3"><h5><i class="bi bi-check-circle text-success"></i> Matched skills ({{ a.matched_skills|length }})</h5>
+      {% for s in a.matched_skills %}<span class="skill skill-ok">{{ s }}</span>{% empty %}<span class="text-muted">No overlap detected.</span>{% endfor %}</div>
+    <div class="card p-4 mb-3"><h5><i class="bi bi-exclamation-triangle text-danger"></i> Skill gaps ({{ a.missing_skills|length }})</h5>
+      {% for m in a.missing_skills %}<span class="skill skill-miss" title="{{ m.priority }} priority">{{ m.name }}{% if m.priority == 'high' %} ★{% endif %}</span>{% empty %}<span class="text-success">No gaps — you cover every skill in this job.</span>{% endfor %}
+      {% if a.missing_skills %}<div class="small text-muted mt-1">★ = emphasised repeatedly in the job description</div>{% endif %}</div>
+    {% if a.related_skills %}<div class="card p-4 mb-3"><h5><i class="bi bi-arrow-left-right text-warning"></i> Related skills you already have</h5>
+      <p class="small text-muted">These count for half credit — they transfer, but aren't the same.</p>
+      {% for r in a.related_skills %}<div class="mb-1"><span class="skill skill-miss">{{ r.missing }}</span> ← <span class="skill skill-rel">{{ r.have|join:", " }}</span></div>{% endfor %}</div>{% endif %}
+    {% if a.explanation.extra %}<div class="card p-4 mb-3"><h5>Your other skills</h5><p class="small text-muted">Not requested here, but part of your profile.</p>
+      {% for s in a.explanation.extra %}<span class="skill skill-neutral">{{ s }}</span>{% endfor %}</div>{% endif %}
+    <div class="card p-4"><h5><i class="bi bi-lightbulb text-warning"></i> How to improve for this job</h5>
+      <p class="small text-muted">Honest advice only — never add a skill you don't have.</p>
+      {% for s in a.suggestions %}<div class="suggestion prio-{{ s.priority }} small">{{ s.text }}</div>{% endfor %}</div>
+  </div>
+</div>
+{% endblock %}

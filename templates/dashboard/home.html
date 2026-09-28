@@ -1,0 +1,36 @@
+{% extends "base.html" %}{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3"><div><h3 class="mb-0">Hi {{ user.first_name|default:user.username }} 👋</h3><span class="text-muted">Here's how your resume is doing.</span></div>
+  <a class="btn btn-brand" href="{% url 'analysis:new' %}"><i class="bi bi-bullseye"></i> Match a job</a></div>
+<div class="row g-3 mb-3">
+  <div class="col-6 col-lg-3"><div class="card p-3"><div class="d-flex gap-3 align-items-center"><div class="icon-box bg-primary-subtle text-primary"><i class="bi bi-file-earmark-text"></i></div><div><div class="stat">{{ stats.resumes }}</div><div class="stat-label">Resumes</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card p-3"><div class="d-flex gap-3 align-items-center"><div class="icon-box bg-info-subtle text-info"><i class="bi bi-clipboard-data"></i></div><div><div class="stat">{{ stats.analyses }}</div><div class="stat-label">Analyses</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card p-3"><div class="d-flex gap-3 align-items-center"><div class="icon-box bg-warning-subtle text-warning"><i class="bi bi-speedometer2"></i></div><div><div class="stat">{{ stats.avg|floatformat:0 }}%</div><div class="stat-label">Average match</div></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card p-3"><div class="d-flex gap-3 align-items-center"><div class="icon-box bg-success-subtle text-success"><i class="bi bi-trophy"></i></div><div><div class="stat">{{ stats.best|floatformat:0 }}%</div><div class="stat-label">Best match</div></div></div></div></div>
+</div>
+{% if not resume %}<div class="card p-5 text-center"><h5>Start by uploading your resume</h5><p class="text-muted">We'll extract your skills, education and experience automatically.</p><div><a class="btn btn-brand" href="{% url 'resumes:upload' %}">Upload resume</a></div></div>
+{% else %}
+<div class="row g-3 mb-3">
+  <div class="col-lg-8"><div class="card p-3"><h6>Match score trend</h6><div class="chart-box"><canvas id="trend"></canvas></div></div></div>
+  <div class="col-lg-4"><div class="card p-3"><h6>Match quality</h6><div class="chart-box"><canvas id="bands"></canvas></div></div></div>
+  <div class="col-lg-6"><div class="card p-3"><h6>Most frequent skill gaps</h6><div class="chart-box"><canvas id="gaps"></canvas></div></div></div>
+  <div class="col-lg-3"><div class="card p-3"><h6>Skills by category</h6><div class="chart-box"><canvas id="cats"></canvas></div></div></div>
+  <div class="col-lg-3"><div class="card p-3 text-center"><h6>Resume health</h6><div class="d-flex justify-content-center"><div class="score-ring {% if health.score >= 70 %}ring-success{% elif health.score >= 45 %}ring-warning{% else %}ring-danger{% endif %}" style="--p:{{ health.score }}"><div><b>{{ health.score }}</b></div></div></div><a class="small" href="{% url 'resumes:detail' resume.pk %}">See tips</a></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-6"><div class="card p-3"><div class="d-flex justify-content-between"><h6>Top job matches</h6><a class="small" href="{% url 'jobs:recommended' %}">View all</a></div>
+    {% for r in recs %}<div class="d-flex justify-content-between border-top py-2"><a class="text-decoration-none" href="{% url 'jobs:detail' r.job.pk %}">{{ r.job.title }} <span class="text-muted small">· {{ r.job.company }}</span></a><span class="badge text-bg-primary">{{ r.score|floatformat:0 }}%</span></div>{% empty %}<div class="text-muted small">No jobs yet.</div>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="card p-3"><div class="d-flex justify-content-between"><h6>Recent analyses</h6><a class="small" href="{% url 'analysis:history' %}">History</a></div>
+    {% for a in recent %}<div class="d-flex justify-content-between border-top py-2"><a class="text-decoration-none" href="{% url 'analysis:detail' a.pk %}">{{ a.job_title|default:"Custom JD" }}</a><span class="badge text-bg-{{ a.band }}">{{ a.score|floatformat:0 }}%</span></div>{% empty %}<div class="text-muted small">No analyses yet.</div>{% endfor %}</div></div>
+</div>{% endif %}
+{% endblock %}
+{% block scripts %}{% if resume %}
+{{ charts|json_script:"chart-data" }}
+<script>
+const D = JSON.parse(document.getElementById("chart-data").textContent);
+const pal = ["#4f46e5","#7c3aed","#06b6d4","#22c55e","#f59e0b","#ef4444","#ec4899","#64748b","#14b8a6"];
+makeChart("trend", {type:"line", data:{labels:D.trend.labels, datasets:[{label:"Match %", data:D.trend.scores, borderColor:"#4f46e5", backgroundColor:"rgba(79,70,229,.12)", fill:true, tension:.35}]}, options:{maintainAspectRatio:false, scales:{y:{min:0,max:100}}, plugins:{legend:{display:false}}}});
+makeChart("bands", {type:"doughnut", data:{labels:["Strong (70+)","Good (45-69)","Low (<45)"], datasets:[{data:D.bands, backgroundColor:["#22c55e","#f59e0b","#ef4444"]}]}, options:{maintainAspectRatio:false, plugins:{legend:{position:"bottom"}}}});
+makeChart("gaps", {type:"bar", data:{labels:D.gaps.labels, datasets:[{label:"Times missing", data:D.gaps.values, backgroundColor:"#ef4444"}]}, options:{indexAxis:"y", maintainAspectRatio:false, plugins:{legend:{display:false}}}});
+makeChart("cats", {type:"doughnut", data:{labels:Object.keys(D.categories), datasets:[{data:Object.values(D.categories), backgroundColor:pal}]}, options:{maintainAspectRatio:false, plugins:{legend:{position:"bottom", labels:{boxWidth:10}}}}});
+</script>{% endif %}{% endblock %}

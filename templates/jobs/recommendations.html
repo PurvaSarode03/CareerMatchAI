@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Recommended jobs{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2"><h3>Recommended jobs</h3>
+  {% if resumes %}<form method="get" class="d-flex gap-2"><select class="form-select" name="resume" onchange="this.form.submit()">{% for r in resumes %}<option value="{{ r.pk }}" {% if resume.pk == r.pk %}selected{% endif %}>{{ r.title }}</option>{% endfor %}</select></form>{% endif %}</div>
+{% if not resume %}<div class="card p-5 text-center text-muted">Upload a resume to get recommendations. <a href="{% url 'resumes:upload' %}">Upload now</a></div>{% else %}
+<div class="row g-3">
+{% for r in recs %}<div class="col-md-6"><div class="card card-hover p-3 h-100"><div class="d-flex justify-content-between">
+  <div><h5 class="mb-0"><a class="text-decoration-none" href="{% url 'jobs:detail' r.job.pk %}">{{ r.job.title }}</a></h5><div class="text-muted small">{{ r.job.company }} · {{ r.job.location }}</div></div>
+  <span class="badge align-self-start fs-6 text-bg-{% if r.score >= 70 %}success{% elif r.score >= 45 %}warning{% else %}danger{% endif %}">{{ r.score|floatformat:0 }}%</span></div>
+  <div class="mt-2 small text-muted">Skills {{ r.skill_score|floatformat:0 }}% · Semantic {{ r.semantic_score|floatformat:0 }}%</div>
+  <div class="mt-2">{% for s in r.matched %}<span class="skill skill-ok">{{ s }}</span>{% endfor %}{% for s in r.missing %}<span class="skill skill-miss">{{ s }}</span>{% endfor %}</div>
+  <a class="btn btn-sm btn-outline-primary mt-auto align-self-start" href="{% url 'analysis:new' %}?job={{ r.job.pk }}&resume={{ resume.pk }}">Full analysis</a>
+</div></div>{% empty %}<div class="col"><div class="card p-5 text-center text-muted">No active jobs yet.</div></div>{% endfor %}
+</div>{% endif %}
+{% endblock %}

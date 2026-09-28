@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Jobs{% endblock %}
+{% block content %}
+<h3 class="mb-3">Find jobs</h3>
+<form class="card p-3 mb-3" method="get"><div class="row g-2">
+  <div class="col-md-4"><input class="form-control" name="q" value="{{ f.q }}" placeholder="Title, company or skill"></div>
+  <div class="col-md-2"><input class="form-control" name="location" value="{{ f.location }}" placeholder="Location"></div>
+  <div class="col-md-2"><select class="form-select" name="type"><option value="">Any type</option>{% for k, v in job_types %}<option value="{{ k }}" {% if f.type == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><select class="form-select" name="level"><option value="">Any level</option>{% for k, v in levels %}<option value="{{ k }}" {% if f.level == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><select class="form-select" name="skill"><option value="">Any skill</option>{% for s in skills %}<option value="{{ s.pk }}" {% if f.skill == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>{% endfor %}</select></div>
+  <div class="col-12"><button class="btn btn-brand btn-sm"><i class="bi bi-search"></i> Search</button> <a class="btn btn-link btn-sm" href="{% url 'jobs:list' %}">Reset</a></div></div></form>
+<div class="row g-3">
+{% for j in page %}<div class="col-md-6 col-lg-4"><div class="card card-hover h-100 p-3">
+  <h5 class="mb-0"><a class="text-decoration-none" href="{% url 'jobs:detail' j.pk %}">{{ j.title }}</a></h5>
+  <div class="text-muted small mb-2">{{ j.company }} · {{ j.location|default:"—" }} · {{ j.get_job_type_display }}</div>
+  <div class="mb-2">{% for s in j.required_skills.all|slice:":6" %}<span class="skill skill-neutral">{{ s.name }}</span>{% endfor %}</div>
+  <a class="btn btn-sm btn-outline-primary mt-auto align-self-start" href="{% url 'analysis:new' %}?job={{ j.pk }}">Match with my resume</a>
+</div></div>{% empty %}<div class="col"><div class="card p-5 text-center text-muted">No jobs found.</div></div>{% endfor %}
+</div>
+{% include "partials/pagination.html" %}
+{% endblock %}
