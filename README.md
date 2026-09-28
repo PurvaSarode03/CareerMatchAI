@@ -5,7 +5,7 @@ Python-only stack: **Django + MySQL**, Bootstrap 5 / Chart.js frontend, and an i
 
 ## 🎥 Project Demo
 
-[▶️ Watch Project Demo](./cv.mp4)
+[▶️ Watch Project Demo](https://github.com/PurvaSarode03/CareerMatchAI/blob/main/cv.mp4)
 
 ## Quick start
 ```bash
