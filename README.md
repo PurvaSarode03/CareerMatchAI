@@ -5,9 +5,7 @@ Python-only stack: **Django + MySQL**, Bootstrap 5 / Chart.js frontend, and an i
 
 ## 🎥 Project Demo
 
-<video src="cv.mp4" controls width="800">
-  Your browser does not support the video tag.
-</video>
+[▶️ Watch Project Demo](./cv.mp4)
 
 ## Quick start
 ```bash
