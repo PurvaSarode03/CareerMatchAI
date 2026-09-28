@@ -19,7 +19,7 @@ Python-only stack: **Django + MySQL**, Bootstrap 5 / Chart.js frontend, and an i
   </tr>
   <tr>
     <td align="center">
-      <img src="./recommendation.jpeg" width="600"><br>
+      <img src="./analysis.jpeg" width="600"><br>
       <b>AI Analysis</b>
     </td>
     <td align="center">
